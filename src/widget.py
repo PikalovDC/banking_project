@@ -1,12 +1,18 @@
-from masks import get_mask_card_number, get_mask_account
 from datetime import datetime
 
-def mask_account_card(bank_data: str = None) -> str:
+from masks import get_mask_account, get_mask_card_number
+
+
+def mask_account_card(bank_data: str | None = None) -> str:
+    """
+    Запрашивает тип и номер карты или счета, обрабатывает введенное значение
+    и применяет к этому значению функцию get_mask_card_number() или get_mask_account
+    в зависимости от того, был ли введен тип и номер банковской карты или номер счета
+    """
 
     if bank_data is None:
 
         bank_data = input("Введите тип карты (Visa, Master Card) и номер карты или 'Счет' и его номер:").strip()
-
 
     # Разделяем строку на слова
     input_data = bank_data.split()
@@ -31,17 +37,22 @@ def mask_account_card(bank_data: str = None) -> str:
 
 
 def get_date(input_date: str) -> str:
-    # Здесь на вход подается дата в формате "2024-03-11T02:26:18.671407"
-    # Парсим исходную дату
+    """
+    На вход подается строка с датой в формате '2024-03-11T02:26:18.671407',
+    возвращается строка с датой в формате 'ДД.ММ.ГГГГ' - ('11.03.2024')
+    """
 
     try:
         date_only = datetime.fromisoformat(input_date)
 
-    # Форматируем в нужный формат
+    # Преобразуем в нужный формат
         return date_only.strftime("%d.%m.%Y")
 
-    #Добавил блок обработки ошибок на случай некорректного формата даты
+    # Добавил блок обработки ошибок на случай некорректного формата даты
     except ValueError:
         raise ValueError("Неверный формат даты. Ожидается формат: '2024-03-11T02:26:18.671407'")
 
+
 print(get_date("2024-03-11T02:26:18.671407"))
+
+

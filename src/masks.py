@@ -1,4 +1,4 @@
-def get_mask_card_number(card_number: str = None) -> str:
+def get_mask_card_number(card_number: str | None = None) -> str:
     """
     Запрашивает номер карты, проверяет, что введены только цифры,
     и возвращает маску номера в формате XXXX XX** **** XXXX.
@@ -25,12 +25,13 @@ def get_mask_card_number(card_number: str = None) -> str:
     return mask
 
 
-def get_mask_account(account_number: str = None) -> str:
+def get_mask_account(account_number: str | None = None) -> str:
     """
     Запрашивает номер счета, проверяет, что введены только цифры,
     и возвращает маску номера в формате **XXXX.
     """
     if account_number is None:
+
     # Интерактивный режим
 
         while True:
@@ -47,4 +48,3 @@ def get_mask_account(account_number: str = None) -> str:
 
     account_mask = f"**{account_number[-4:]}"
     return account_mask
-
