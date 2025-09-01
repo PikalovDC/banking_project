@@ -32,7 +32,7 @@ def get_mask_account(account_number: str | None = None) -> str:
     """
     if account_number is None:
 
-    # Интерактивный режим
+        # Интерактивный режим
 
         while True:
             account_number = input("Введите номер счета (20 цифр без пробелов):").strip()
