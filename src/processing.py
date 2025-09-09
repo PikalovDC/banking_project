@@ -21,15 +21,27 @@ def filter_by_state(operations: List[Dict[str, Any]], state: str = "EXECUTED") -
 def sort_by_date(lists: List[Dict[str, Any]], reverse: bool = True) -> List[Dict[str, Any]]:
     """
     Сортирует список операций по дате.
+    Выбрасывает ValueError при некорректном формате даты.
     Args:
         lists: Список словарей с операциями
         reverse: Порядок сортировки (True - по убыванию, False - по возрастанию)
-    Возвращает отсортированный список операций
+    Возвращает:
+        Отсортированный список операций
+    Ошибка:
+        ValueError: Если встречается некорректный формат даты
     """
 
-    sorted_list = sorted(
-        lists,
-        key=lambda operation: datetime.fromisoformat(operation['date']) if 'date' in operation else datetime.min,
-        reverse=reverse
-    )
-    return sorted_list
+    def get_date_key(operation: Dict[str, Any]) -> datetime:
+        """Вспомогательная функция для получения даты с проверкой"""
+        if 'date' not in operation:
+            raise ValueError(f"Отсутствует ключ 'date' в операции: {operation}")
+
+        try:
+            return datetime.fromisoformat(operation['date'])
+        except ValueError:
+            raise ValueError(f"Некорректный формат даты: '{operation['date']}' в операции: {operation}")
+        except TypeError:
+            raise ValueError(f"Некорректный тип даты: {type(operation['date'])} в операции: {operation}")
+
+    return sorted(lists, key=get_date_key, reverse=reverse)
+
