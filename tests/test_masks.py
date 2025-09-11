@@ -7,16 +7,18 @@ def test_get_mask_card_number():
     """Тест правильности маскирования номера карты"""
     assert get_mask_card_number("8888888888888888") == "8888 88** **** 8888"
 
+
 def test_get_mask_card_number_different_lengths():
     """Обработка номеров карт разной длины"""
 
     # Тест на обработку слишком короткого номера карты
-    with pytest.raises(ValueError) as too_short_number:
+    with pytest.raises(ValueError):
         get_mask_card_number("123456789")
 
     # Тест на обработку слишком длинного номера карты
-    with pytest.raises(ValueError) as too_long_number:
+    with pytest.raises(ValueError):
         get_mask_card_number("12345678901234567890")
+
 
 def test_get_mask_card_number_non_digits():
     """Тест обработки нечисловых входных данных"""
@@ -26,6 +28,7 @@ def test_get_mask_card_number_non_digits():
     # Обработка пустой строки
     with pytest.raises(ValueError):
         get_mask_card_number("")
+
 
 # Тесты для get_mask_account
 

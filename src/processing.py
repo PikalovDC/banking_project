@@ -44,4 +44,3 @@ def sort_by_date(lists: List[Dict[str, Any]], reverse: bool = True) -> List[Dict
             raise ValueError(f"Некорректный тип даты: {type(operation['date'])} в операции: {operation}")
 
     return sorted(lists, key=get_date_key, reverse=reverse)
-

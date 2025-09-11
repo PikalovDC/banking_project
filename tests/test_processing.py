@@ -15,6 +15,7 @@ def sample_operations():
         {'id': 2818, 'state': 'EXECUTED', 'date': '2024-01-25T16:10:00.000000'},
     ]
 
+
 @pytest.fixture
 def operations_with_same_dates():
     """Фикстура с операциями с одинаковыми датами"""
@@ -24,6 +25,7 @@ def operations_with_same_dates():
         {'id': 594226727, 'state': 'CANCELED', 'date': '2024-01-15T10:30:00.000000'},
     ]
 
+
 @pytest.fixture
 def operations_without_state():
     """Фикстура с операциями без state"""
@@ -32,6 +34,7 @@ def operations_without_state():
         {'id': 1259287, 'date': '2024-01-10T14:20:00.000000'},
     ]
 
+
 @pytest.fixture
 def operations_with_invalid_dates():
     """Фикстура с операциями с некорректными датами"""
@@ -39,6 +42,7 @@ def operations_with_invalid_dates():
         {'id': 1, 'state': 'EXECUTED', 'date': 'invalid-date'},  # Некорректный формат
         {'id': 2, 'state': 'EXECUTED', 'date': '2024-01-10T14:20:00.000000'},  # Корректная дата
     ]
+
 
 @pytest.fixture
 def operations_without_date():
@@ -57,30 +61,37 @@ def operations_with_wrong_date_type():
         {'id': 2, 'state': 'EXECUTED', 'date': '2024-01-10T14:20:00.000000'},  # Корректная дата
     ]
 
+
 # Тесты для filter_by_state
 def test_filter_by_state_executed(sample_operations):
     """Тест фильтрации по EXECUTED"""
     assert len(filter_by_state(sample_operations, 'EXECUTED')) == 3
 
+
 def test_filter_by_state_canceled(sample_operations):
     """Тест фильтрации по CANCELED"""
     assert len(filter_by_state(sample_operations, 'CANCELED')) == 2
+
 
 def test_filter_by_state_default(sample_operations):
     """Тест фильтрации со значением по умолчанию"""
     assert len(filter_by_state(sample_operations)) == 3
 
+
 def test_filter_by_state_no_matches(sample_operations):
     """Тест фильтрации когда нет совпадений"""
     assert len(filter_by_state(sample_operations, 'NONEXISTENT')) == 0
+
 
 def test_filter_by_state_empty_list():
     """Тест фильтрации пустого списка"""
     assert len(filter_by_state([], 'EXECUTED')) == 0
 
+
 def test_filter_by_state_no_state_key(operations_without_state):
     """Тест фильтрации когда нет ключа state"""
     assert len(filter_by_state(operations_without_state, 'EXECUTED')) == 0
+
 
 # Тесты для sort_by_date
 def test_sort_by_date_descending(sample_operations):
@@ -104,6 +115,7 @@ def test_sort_by_date_same_dates(operations_with_same_dates):
     # При одинаковых датах порядок должен сохраниться
     ids = [op['id'] for op in result]
     assert ids == [41428829, 939719570, 594226727]  # Исходный порядок
+
 
 def test_sort_by_date_raises_on_invalid_date_format(operations_with_invalid_dates):
     """Тест что функция выбрасывает ValueError при некорректном формате даты"""

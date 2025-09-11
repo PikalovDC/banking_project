@@ -2,8 +2,6 @@ import pytest
 from src.widget import mask_account_card, get_date
 
 
-
-
 # Тесты для mask_account_card
 @pytest.mark.parametrize("input_data, expected", [
     ("Visa Platinum 1234567890123456", "Visa Platinum 1234 56** **** 3456"),
@@ -15,6 +13,7 @@ def test_mask_account_card_different_types(input_data, expected):
     """Тест распознавания разных типов карт и счетов"""
     assert mask_account_card(input_data) == expected
 
+
 def test_mask_account_card_invalid_input():
     """Тест обработки некорректных входных данных"""
     # Недостаточно данных
@@ -24,6 +23,7 @@ def test_mask_account_card_invalid_input():
     # Только номер без типа
     with pytest.raises(ValueError):
         mask_account_card("1234567890123456")
+
 
 def test_mask_account_card_case_insensitive():
     """Тест чувствительности к регистру"""
@@ -35,6 +35,7 @@ def test_mask_account_card_case_insensitive():
     assert "**7890" in result2
     assert "**7890" in result3
 
+
 # Тесты для get_date
 @pytest.mark.parametrize("input_date, expected", [
     ("2025-03-11T02:26:18.671407", "11.03.2025"),
@@ -44,6 +45,7 @@ def test_mask_account_card_case_insensitive():
 def test_get_date_valid_formats(input_date, expected):
     """Тест правильности преобразования даты"""
     assert get_date(input_date) == expected
+
 
 def test_get_date_invalid_formats():
     """Тест обработки некорректных форматов даты"""
@@ -58,6 +60,7 @@ def test_get_date_invalid_formats():
     for invalid_date in invalid_dates:
         with pytest.raises(ValueError):
             get_date(invalid_date)
+
 
 def test_get_date_leap_year():
     """Тест високосного года"""
