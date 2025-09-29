@@ -96,6 +96,35 @@ sorted_ops = sort_by_date(operations, True)
 * Сортировка по возрастанию (сначала старые)
 sorted_ops = sort_by_date(operations, False)
 
+## Декораторы
+### Декоратор логирования log()
+Декоратор для автоматического логирования выполнения функций
+#### Пример использования:
+Импорт - from decorators import log
+
+* Логирование в файл:
+@log(filename="operations.log")
+def process_transaction(amount: float, currency: str) -> dict:
+    """Обработка банковской транзакции"""
+    return {"status": "success", "amount": amount, "currency": currency}
+
+* Логирование в консоль:
+@log()
+def validate_card(card_number: str) -> bool:
+    """Валидация номера карты"""
+    return len(card_number) == 16 and card_number.isdigit()
+
+* Использование: 
+process_transaction(1000.0, "USD")  # Запись в operations.log
+validate_card("1234567890123456")   # Вывод в консоль
+
+Формат логов:
+
+Успешное выполнение: function_name ok
+
+Ошибка: function_name error: ErrorType. Inputs: (args), {kwargs}
+
+
 # Разработка
 Проект находится в активной разработке.
 
