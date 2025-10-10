@@ -96,6 +96,78 @@ sorted_ops = sort_by_date(operations, True)
 * Сортировка по возрастанию (сначала старые)
 sorted_ops = sort_by_date(operations, False)
 
+### Открытие JSON файла и конвертация валюты 
+#### Открытие JSON-файла - load_transactions()
+Загружает список транзакций из JSON-файла.
+Возвращает список словарей с данными транзакций
+
+from src.load_transactions import load_transactions
+
+#### Пример использования:
+transactions = load_transactions("../data/operations.json")
+
+if transactions:
+    print(f"Успешно загружено {len(transactions)} транзакций")
+    # Пример вывода первой транзакции
+    first_tx = transactions[0]
+    print(f"ID: {first_tx['id']}")
+    print(f"Сумма: {first_tx['operationAmount']['amount']} {first_tx['operationAmount']['currency']['code']}")
+else:
+    print("Не удалось загрузить транзакции или файл пуст")
+
+#### Конвертация валюты - get_amount_in_rubles()
+Конвертирует сумму транзакции в рубли.
+
+#### Пример использования:
+from src.external_api import get_amount_in_rubles
+
+Транзакция в рублях
+rub_transaction = {
+    "operationAmount": {
+        "amount": "1500.75",
+        "currency": {"code": "RUB"}
+    }
+}
+result = get_amount_in_rubles(rub_transaction)  # 1500.75
+
+Транзакция в USD (требует API ключ)
+usd_transaction = {
+    "operationAmount": {
+        "amount": "100.00", 
+        "currency": {"code": "USD"}
+    }
+}
+result = get_amount_in_rubles(usd_transaction)  # 7500.0 (при курсе 75)
+
+
+## Декораторы
+### Декоратор логирования log()
+Декоратор для автоматического логирования выполнения функций
+#### Пример использования:
+Импорт - from decorators import log
+
+* Логирование в файл:
+@log(filename="operations.log")
+def process_transaction(amount: float, currency: str) -> dict:
+    """Обработка банковской транзакции"""
+    return {"status": "success", "amount": amount, "currency": currency}
+
+* Логирование в консоль:
+@log()
+def validate_card(card_number: str) -> bool:
+    """Валидация номера карты"""
+    return len(card_number) == 16 and card_number.isdigit()
+
+* Использование: 
+process_transaction(1000.0, "USD")  # Запись в operations.log
+validate_card("1234567890123456")   # Вывод в консоль
+
+Формат логов:
+
+Успешное выполнение: function_name ok
+
+Ошибка: function_name error: ErrorType. Inputs: (args), {kwargs}
+
 ### Фильтрация банковских операций
 
 1. `filter_by_currency()`
