@@ -168,6 +168,88 @@ validate_card("1234567890123456")   # Вывод в консоль
 
 Ошибка: function_name error: ErrorType. Inputs: (args), {kwargs}
 
+### Фильтрация банковских операций
+
+1. `filter_by_currency()`
+Фильтрует транзакции по коду валюты и возвращает итератор.
+#### Пример использования
+from generators import filter_by_currency
+
+transactions = [
+    {
+        "id": 939719570,
+        "operationAmount": {
+            "amount": "9824.07",
+            "currency": {"name": "USD", "code": "USD"}
+        }
+    },
+    {
+        "id": 873106923,
+        "operationAmount": {
+            "amount": "43318.34",
+            "currency": {"name": "RUB", "code": "RUB"}
+        }
+    }
+]
+
+#### Получение USD транзакций
+usd_transactions = filter_by_currency(transactions, "USD")
+
+#### Использование next() для получения транзакций по одной
+print(next(usd_transactions))  # Первая USD транзакция
+print(next(usd_transactions))  # Вторая USD транзакция
+
+2. `transaction_descriptions()`
+Возвращает итератор с описаниями транзакций
+#### Пример использования
+from generators import transaction_descriptions
+
+transactions = [
+    {"description": "Перевод организации"},
+    {"description": "Перевод со счета на счет"},
+    {"description": "Перевод с карты на карту"}
+]
+
+#### Получение итератора описаний
+descriptions = transaction_descriptions(transactions)
+
+#### Поочередное получение описаний
+print(next(descriptions))  # "Перевод организации"
+print(next(descriptions))  # "Перевод со счета на счет"
+print(next(descriptions))  # "Перевод с карты на карту"
+
+3. `card_number_generator()`
+Генерирует номера банковских карт в заданном диапазоне
+#### Пример использования
+from generators import card_number_generator
+
+#### Генерация первых 5 номеров карт
+for card_number in card_number_generator(1, 5):
+    print(card_number)
+
+Результат:
+
+0000 0000 0000 0001
+
+0000 0000 0000 0002
+
+0000 0000 0000 0003
+
+0000 0000 0000 0004
+
+0000 0000 0000 0005
+
+#### Генерация конкретного диапазона
+for card_number in card_number_generator(1234567890123456, 1234567890123458):
+    print(card_number)
+
+Результат:
+
+1234 5678 9012 3456
+
+1234 5678 9012 3457
+
+1234 5678 9012 3458
 
 # Разработка
 Проект находится в активной разработке.
