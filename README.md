@@ -96,7 +96,7 @@ sorted_ops = sort_by_date(operations, True)
 * Сортировка по возрастанию (сначала старые)
 sorted_ops = sort_by_date(operations, False)
 
-### Открытие JSON файла и конвертация валюты 
+### Открытие файлов и конвертация валюты 
 #### Открытие JSON-файла - load_transactions()
 Загружает список транзакций из JSON-файла.
 Возвращает список словарей с данными транзакций
@@ -104,7 +104,7 @@ sorted_ops = sort_by_date(operations, False)
 from src.load_transactions import load_transactions
 
 #### Пример использования:
-transactions = load_transactions("../data/operations.json")
+transactions = load_json_transactions("../data/operations.json")
 
 if transactions:
     print(f"Успешно загружено {len(transactions)} транзакций")
@@ -114,6 +114,25 @@ if transactions:
     print(f"Сумма: {first_tx['operationAmount']['amount']} {first_tx['operationAmount']['currency']['code']}")
 else:
     print("Не удалось загрузить транзакции или файл пуст")
+
+#### Открытие csv-файла - load_csv_transactions()
+Загружает список транзакций из csv-файла.
+Возвращает список словарей с данными транзакций
+
+from src.file_handlers import load_csv_transactions
+
+#### Пример использования:
+transactions = load_csv_transactions('data/transactions.csv'), где 'transactions.csv' - файл csv с транзакциями
+
+#### Открытие excel-файла - load_excel_transactions()
+Загружает список транзакций из excel-файла.
+Возвращает список словарей с данными транзакций
+
+from src.file_handlers import load_excel_transactions
+
+#### Пример использования:
+transactions = load_excel_transactions('data/transactions.xlsx'), где 'transactions.xlsx' - файл excel с транзакциями
+
 
 #### Конвертация валюты - get_amount_in_rubles()
 Конвертирует сумму транзакции в рубли.
@@ -138,6 +157,7 @@ usd_transaction = {
     }
 }
 result = get_amount_in_rubles(usd_transaction)  # 7500.0 (при курсе 75)
+
 
 
 ## Декораторы
