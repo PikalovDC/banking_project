@@ -1,3 +1,5 @@
+from collections import Counter, defaultdict
+import re
 from datetime import datetime
 from typing import Any, Dict, List
 
@@ -22,13 +24,6 @@ def sort_by_date(lists: List[Dict[str, Any]], reverse: bool = True) -> List[Dict
     """
     Сортирует список операций по дате.
     Выбрасывает ValueError при некорректном формате даты.
-    Args:
-        lists: Список словарей с операциями
-        reverse: Порядок сортировки (True - по убыванию, False - по возрастанию)
-    Возвращает:
-        Отсортированный список операций
-    Ошибка:
-        ValueError: Если встречается некорректный формат даты
     """
 
     def get_date_key(operation: Dict[str, Any]) -> datetime:
