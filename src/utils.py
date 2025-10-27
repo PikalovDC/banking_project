@@ -3,13 +3,14 @@ import logging
 import os
 from typing import Any, Dict, List
 
+from src.file_handlers import load_csv_transactions, load_excel_transactions
 from src.logger_config import setup_logging
 
 # Создан отдельный объект логера для модуля utils
 logger = logging.getLogger('utils')
 
 
-def load_transactions(file_path: str) -> List[Dict[str, Any]]:
+def load_json_transactions(file_path: str) -> List[Dict[str, Any]]:
     """
     Загружает список транзакций из JSON-файла.
     Возвращает список словарей с данными о финансовых транзакциях.
@@ -49,6 +50,25 @@ def load_transactions(file_path: str) -> List[Dict[str, Any]]:
         # Обрабатываем ошибки чтения файла, парсинга JSON и другие системные ошибки
         # Логирование ошибочного случая с уровнем ERROR
         logger.error(f"Ошибка при загрузке файла {file_path}: {e}")
+        return []
+
+
+def load_transactions(file_path: str) -> List[Dict[str, Any]]:
+    """
+    Универсальная функция для загрузки транзакций из разных форматов.
+    """
+    logger.info(f"Загрузка транзакций из: {file_path}")
+
+    file_extension = os.path.splitext(file_path)[1].lower()
+
+    if file_extension == '.json':
+        return load_json_transactions(file_path)
+    elif file_extension == '.csv':
+        return load_csv_transactions(file_path)
+    elif file_extension in ['.xlsx', '.xls']:
+        return load_excel_transactions(file_path)
+    else:
+        logger.error(f"Неподдерживаемый формат: {file_extension}")
         return []
 
 
