@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from src.processing import filter_by_state, sort_by_date
+from src.processing import count_operations_by_category, filter_by_description, filter_by_state, sort_by_date
 
 
 # Фикстуры для тестовых данных
@@ -135,3 +135,145 @@ def test_sort_by_date_raises_on_wrong_date_type(operations_with_wrong_date_type)
     """Тест что функция выбрасывает ValueError при некорректном типе даты"""
     with pytest.raises(ValueError, match="Некорректный тип даты:"):
         sort_by_date(operations_with_wrong_date_type)
+
+
+def test_filter_by_description_basic():
+    """Тест базовой фильтрации по описанию."""
+    operations = [
+        {"id": 1, "description": "Перевод организации"},
+        {"id": 2, "description": "Оплата услуг"},
+        {"id": 3, "description": "Перевод другу"}
+    ]
+
+    result = filter_by_description(operations, "перевод")
+
+    assert len(result) == 2
+    assert result[0]["id"] == 1
+    assert result[1]["id"] == 3
+
+
+def test_filter_by_description_case_insensitive():
+    """Тест регистронезависимого поиска."""
+    operations = [
+        {"description": "Перевод организации"},
+        {"description": "перевод другу"},
+        {"description": "ПЕРЕВОД средств"}
+    ]
+
+    result = filter_by_description(operations, "ПЕРЕВОД")
+
+    assert len(result) == 3
+
+
+def test_filter_by_description_empty_search():
+    """Тест с пустой строкой поиска."""
+    operations = [
+        {"description": "Перевод организации"},
+        {"description": "Оплата услуг"}
+    ]
+
+    result = filter_by_description(operations, "")
+
+    assert len(result) == 2
+
+
+def test_filter_by_description_no_matches():
+    """Тест когда нет совпадений."""
+    operations = [
+        {"description": "Перевод организации"},
+        {"description": "Оплата услуг"}
+    ]
+
+    result = filter_by_description(operations, "пополнение")
+
+    assert len(result) == 0
+
+
+def test_filter_by_description_partial_match():
+    """Тест частичного совпадения."""
+    operations = [
+        {"description": "Международный перевод"},
+        {"description": "Перевод организации"},
+        {"description": "Переводы"}
+    ]
+
+    result = filter_by_description(operations, "перевод")
+
+    assert len(result) == 3
+
+
+def test_filter_by_description_missing_description():
+    """Тест с операциями без поля description."""
+    operations = [
+        {"id": 1, "description": "Перевод организации"},
+        {"id": 2},  # Нет description
+        {"id": 3, "description": ""}  # Пустой description
+    ]
+
+    result = filter_by_description(operations, "перевод")
+
+    assert len(result) == 1
+    assert result[0]["id"] == 1
+
+
+def test_count_operations_by_category_basic():
+    """Тест базового подсчета операций по категориям."""
+    operations = [
+        {"description": "Перевод организации"},
+        {"description": "Оплата услуг"},
+        {"description": "Перевод другу"},
+        {"description": "Оплата налогов"}
+    ]
+
+    categories = ["Перевод", "Оплата"]
+    result = count_operations_by_category(operations, categories)
+
+    assert result == {"Перевод": 2, "Оплата": 2}
+
+
+def test_count_operations_by_category_case_insensitive():
+    """Тест регистронезависимого подсчета."""
+    operations = [
+        {"description": "Перевод организации"},
+        {"description": "перевод другу"},
+        {"description": "ОПЛАТА услуг"}
+    ]
+
+    categories = ["ПЕРЕВОД", "оплата"]
+    result = count_operations_by_category(operations, categories)
+
+    assert result["ПЕРЕВОД"] == 2
+    assert result["оплата"] == 1
+
+
+def test_count_operations_by_category_no_matches():
+    """Тест когда нет совпадений по категориям."""
+    operations = [
+        {"description": "Перевод организации"},
+        {"description": "Оплата услуг"}
+    ]
+
+    categories = ["Пополнение", "Снятие"]
+    result = count_operations_by_category(operations, categories)
+
+    assert result == {"Пополнение": 0, "Снятие": 0}
+
+
+def test_count_operations_by_category_empty_categories():
+    """Тест с пустым списком категорий."""
+    operations = [
+        {"description": "Перевод организации"},
+        {"description": "Оплата услуг"}
+    ]
+
+    result = count_operations_by_category(operations, [])
+
+    assert result == {}
+
+
+def test_count_operations_by_category_empty_operations():
+    """Тест с пустым списком операций."""
+    categories = ["Перевод", "Оплата"]
+    result = count_operations_by_category([], categories)
+
+    assert result == {"Перевод": 0, "Оплата": 0}

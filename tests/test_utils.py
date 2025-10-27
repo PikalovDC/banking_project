@@ -109,7 +109,7 @@ def test_not_list_data_returns_empty_list():
 
     with patch('os.path.exists') as mock_exists, \
             patch('os.path.getsize') as mock_getsize, \
-            patch('builtins.open', mock_open()) as mock_file, \
+            patch('builtins.open', mock_open()), \
             patch('json.load') as mock_json_load:
         mock_exists.return_value = True
         mock_getsize.return_value = 100
@@ -147,7 +147,7 @@ def test_realistic_transaction_structure():
 
     with patch('os.path.exists') as mock_exists, \
             patch('os.path.getsize') as mock_getsize, \
-            patch('builtins.open', mock_open()) as mock_file, \
+            patch('builtins.open', mock_open()), \
             patch('json.load') as mock_json_load:
         mock_exists.return_value = True
         mock_getsize.return_value = 1000
