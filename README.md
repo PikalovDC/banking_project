@@ -188,6 +188,8 @@ validate_card("1234567890123456")   # Вывод в консоль
 
 Ошибка: function_name error: ErrorType. Inputs: (args), {kwargs}
 
+
+## Генераторы
 ### Фильтрация банковских операций
 
 1. `filter_by_currency()`
@@ -270,6 +272,38 @@ for card_number in card_number_generator(1234567890123456, 1234567890123458):
 1234 5678 9012 3457
 
 1234 5678 9012 3458
+
+## Дополнительные возможности
+### Поиск операций по описанию
+
+`filter_by_description()` - позволяет фильтровать транзакции по ключевым словам в описании
+#### Пример использования:
+from src.processing import filter_by_description
+
+operations = [
+    {"description": "Перевод организации"},
+    {"description": "Оплата услуг"},
+    {"description": "Перевод другу"}
+]
+
+Поиск операций с "перевод" в описании
+result = filter_by_description(operations, "перевод")
+Результат: 2 операции
+
+`count_operations_by_category` - подсчитывает количество операций по заданным категориям
+#### Пример использования:
+from src.processing import count_operations_by_category
+
+operations = [
+    {"description": "Перевод организации"},
+    {"description": "Оплата услуг"},
+    {"description": "Перевод другу"},
+    {"description": "Оплата налогов"}
+]
+
+categories = ["Перевод", "Оплата", "Пополнение"]
+result = count_operations_by_category(operations, categories)
+Результат: {"Перевод": 2, "Оплата": 2, "Пополнение": 0}
 
 # Разработка
 Проект находится в активной разработке.
